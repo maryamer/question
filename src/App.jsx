@@ -104,7 +104,6 @@ export default function App() {
             isFavourite={isFavourite}
           />
         )}
-        {/* <CharracterDetail selectedCharacter={selectedCharacter} /> */}
       </div>
     </div>
   );
