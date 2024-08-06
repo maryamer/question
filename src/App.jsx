@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import Loader from "./components/Loader";
 import { HeartIcon } from "@heroicons/react/24/outline";
-import useFetch, { useFetchOne } from "./hooks/useFetch";
+import { useFetchOne } from "./hooks/useFetch";
 
 export default function App() {
   const [characters, setCharacters] = useState([]);
@@ -16,6 +16,7 @@ export default function App() {
   const [selectedEpisodes, setSelectedEpisodes] = useState(null);
   const [query, setQuery] = useState("");
   const [favourites, setFavourites] = useState([]);
+
   const { response: allCharacters, isLoading: fetchIsLoading } = useFetchOne({
     url: "https://rickandmortyapi.com/api/character/",
   });
@@ -31,6 +32,7 @@ export default function App() {
     }`,
     dependency: [selectedCharacterId],
   });
+
   useEffect(() => {
     allCharacters && setCharacters(allCharacters.results);
   }, []);
@@ -38,11 +40,11 @@ export default function App() {
   useEffect(() => {
     searchedCharacters && setCharacters(searchedCharacters.results);
   }, [searchedCharacters]);
+
   useEffect(() => {
     async function f() {
       if (singleCh && !singleCh.results) {
         try {
-          console.log(singleCh);
           const episodeId = singleCh?.episode.map((ep) => ep.split("/").at(-1));
           const { data: episodes } = await axios.get(
             `https://rickandmortyapi.com/api/episode/${episodeId}`
@@ -61,16 +63,26 @@ export default function App() {
   async function onSelectCharacter(characterId) {
     setSelectedCharacterId(characterId);
   }
+
   function onAddFavourite(char) {
-    setFavourites((prev) => [...prev, char]);
+    const isFav = favourites.map((fav) => fav.id).includes(char?.id);
+    if (isFav) {
+      const cloneFav = [...favourites];
+      cloneFav.filter((item) => item.id !== char.id);
+      setFavourites(cloneFav);
+    } else {
+      setFavourites((prev) => [...prev, char]);
+    }
   }
+
   const isFavourite = favourites
     .map((fav) => fav.id)
-    .includes(selectedCharacter);
+    .includes(selectedCharacter?.id);
+
   return (
     <div className="app">
       <Toaster />
-      <Navbar numOfResults={characters.length}>
+      <Navbar>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -79,7 +91,7 @@ export default function App() {
           className="text-field"
         />
         <div className="navbar__result">
-          found {characters.length} characters
+          found {characters?.length || 0} characters
         </div>
         <button className="heart">
           <HeartIcon className="icon" />

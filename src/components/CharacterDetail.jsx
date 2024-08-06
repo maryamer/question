@@ -16,40 +16,11 @@ function CharacterDetail({
         "please select the character"
       ) : (
         <>
-          <div className="character-detail">
-            <img
-              src={selectedCharacter.image}
-              alt={selectedCharacter.name}
-              className="character-detail__image"
-            />
-            <div className="character-detail__info">
-              <h3 className="name">
-                <span>{selectedCharacter.gender === "Male" ? "👨" : "👩"}</span>
-                <span>&nbsp;{selectedCharacter.name}</span>
-              </h3>
-              <div className="info">
-                <span
-                  className={`status ${
-                    selectedCharacter.status === "Dead " && "red"
-                  }`}
-                ></span>
-                <span>{selectedCharacter.status}</span>
-                <span>-{selectedCharacter.species}</span>
-              </div>
-              <div className="location">
-                <p>last known location:</p>
-                <p>{selectedCharacter.location.name}</p>
-              </div>
-              <div className="actions">
-                <button
-                  onClick={() => onAddFavourite(selectedCharacter.id)}
-                  className="btn btn--primary"
-                >
-                  {isFavourite ? "alredy added" : "add to favourite"}
-                </button>
-              </div>
-            </div>
-          </div>
+          <CharacterSubInfo
+            selectedCharacter={selectedCharacter}
+            isFavourite={isFavourite}
+            onAddFavourite={onAddFavourite}
+          />
           <div className="character-episodes">
             <div className="title">
               <h2>List of episodes:</h2>
@@ -76,3 +47,42 @@ function CharacterDetail({
 }
 
 export default CharacterDetail;
+
+function CharacterSubInfo({ selectedCharacter, isFavourite, onAddFavourite }) {
+  return (
+    <div className="character-detail">
+      <img
+        src={selectedCharacter.image}
+        alt={selectedCharacter.name}
+        className="character-detail__image"
+      />
+      <div className="character-detail__info">
+        <h3 className="name">
+          <span>{selectedCharacter.gender === "Male" ? "👨" : "👩"}</span>
+          <span>&nbsp;{selectedCharacter.name}</span>
+        </h3>
+        <div className="info">
+          <span
+            className={`status ${
+              selectedCharacter.status === "Dead " && "red"
+            }`}
+          ></span>
+          <span>{selectedCharacter.status}</span>
+          <span>-{selectedCharacter.species}</span>
+        </div>
+        <div className="location">
+          <p>last known location:</p>
+          <p>{selectedCharacter.location.name}</p>
+        </div>
+        <div className="actions">
+          <button
+            onClick={() => onAddFavourite(selectedCharacter)}
+            className="btn btn--primary"
+          >
+            {isFavourite ? "alredy added" : "add to favourite"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
