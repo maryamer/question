@@ -68,8 +68,8 @@ export default function App() {
     const isFav = favourites.map((fav) => fav.id).includes(char?.id);
     if (isFav) {
       const cloneFav = [...favourites];
-      cloneFav.filter((item) => item.id !== char.id);
-      setFavourites(cloneFav);
+      const filteredFav = cloneFav.filter((item) => item.id !== char.id);
+      setFavourites(filteredFav);
     } else {
       setFavourites((prev) => [...prev, char]);
     }
